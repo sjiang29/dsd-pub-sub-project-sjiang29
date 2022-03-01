@@ -4,6 +4,7 @@ import com.google.protobuf.ByteString;
 import network.Connection;
 import network.FaultInjector;
 import network.LossyInjector;
+import proto.MsgInfo;
 import utils.Config;
 
 import java.io.IOException;
