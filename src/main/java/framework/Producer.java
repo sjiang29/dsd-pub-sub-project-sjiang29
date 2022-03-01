@@ -1,5 +1,6 @@
 package framework;
 
+import com.google.protobuf.ByteString;
 import network.Connection;
 import network.FaultInjector;
 import network.LossyInjector;
@@ -10,11 +11,15 @@ import java.net.Socket;
 
 public class Producer {
     private String brokerName;
+    private String producerName;
     private Connection connection;
+    private int msgId;
 
-    public Producer(String brokerName) {
+    public Producer(String brokerName, String producerName) {
+        this.msgId = 1;
         this.brokerName = brokerName;
-        String brokerAddress = Config.hostList.get(brokerName).getHostAddress();
+        this.producerName = producerName;
+        String brokerAddress = Config.hostList.get(this.brokerName).getHostAddress();
         int brokerPort = Config.hostList.get(brokerName).getPort();
         try {
             Socket socket = new Socket(brokerAddress, brokerPort);
@@ -27,6 +32,12 @@ public class Producer {
     }
 
     public void send(String topic, byte[] data){
+        MsgInfo.Msg sentMsg = MsgInfo.Msg.newBuilder().setContent(ByteString.copyFrom(data)).setId(this.msgId++).setSenderName(this.producerName).build();
+        this.connection.send(sentMsg.toByteArray());
 
+    }
+
+    public void close(){
+        this.connection.close();
     }
 }

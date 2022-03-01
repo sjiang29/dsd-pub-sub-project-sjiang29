@@ -1,0 +1,15 @@
+
+// .proto to define the message sent and received between hosts
+syntax = "proto3";
+
+
+option java_outer_classname = "MsgInfo";
+
+message Msg {
+
+  int32 id = 1;
+  string topic = 2;
+  bytes content = 3;
+  string senderName = 4;
+
+}
