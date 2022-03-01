@@ -1,5 +1,6 @@
 package framework;
 
+import com.google.protobuf.InvalidProtocolBufferException;
 import network.Connection;
 import network.FaultInjector;
 import network.LossyInjector;
@@ -18,8 +19,8 @@ public class Broker {
     // key is topic, value is msg list of corresponding topic
     private ConcurrentHashMap<String, ArrayList<MsgInfo.Msg>> msgLists;
     // key is topic, value is list of consumers who subscribe this topic
-    private ConcurrentHashMap<String, ArrayList<Consumer>> subscriberList;
-
+    private ConcurrentHashMap<String, ArrayList<String>> subscriberList;
+    // key is consumer's name, value is its corresponding connection
     private ConcurrentHashMap<String, Connection> connections;
 
     public Broker(String brokerName) {
@@ -37,7 +38,29 @@ public class Broker {
     }
 
     public void startReceiver(){
+        boolean isListening = true;
+        while(isListening){
+            Connection connection = this.buildNewConnection();
+            this.updateConnections(connection);
 
+            Thread receiver = new Thread(new Receiver(connection));
+            receiver.start();
+        }
+
+    }
+
+    public void updateConnections(Connection connection){
+        byte[] receivedBytes = connection.receive();
+        MsgInfo.Msg receivedMsg = null;
+        try {
+            receivedMsg = MsgInfo.Msg.parseFrom(receivedBytes);
+        } catch (InvalidProtocolBufferException e) {
+            e.printStackTrace();
+        }
+        String sender = receivedMsg.getSenderName();
+        if(!this.connections.contains(sender)){
+            connections.put(sender, connection);
+        }
     }
 
     /**
@@ -64,9 +87,37 @@ public class Broker {
         public Receiver(Connection connection) {
             this.connection = connection;
         }
-
         @Override
         public void run() {
+            boolean isReceiving = true;
+            while(isReceiving){
+                byte[] receivedBytes = this.connection.receive();
+                try {
+                    MsgInfo.Msg receivedMsg = MsgInfo.Msg.parseFrom(receivedBytes);
+                    String sender = receivedMsg.getSenderName();
+                    String type = receivedMsg.getType();
+                    if(type.equals("subscribe") && sender.contains("consumer")){
+                        String subscribedTopic = receivedMsg.getTopic();
+                        ArrayList<String> subscribers = subscriberList.get(subscribedTopic);
+                        if(subscribers == null){
+                            subscribers = new ArrayList<>();
+                        }
+                        subscribers.add(sender);
+                        subscriberList.put(subscribedTopic, subscribers);
+                    } else if (sender.contains("producer")) {
+                        String publishedTopic = receivedMsg.getTopic();
+                        ArrayList<MsgInfo.Msg> messages = msgLists.get(publishedTopic);
+                        if(messages == null){
+                            messages = new ArrayList<>();
+                        }
+                        messages.add(receivedMsg);
+                        msgLists.put(publishedTopic, messages);
+                    }
+
+                } catch (InvalidProtocolBufferException e) {
+                    e.printStackTrace();
+                }
+            }
 
         }
     }
