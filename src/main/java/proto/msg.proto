@@ -12,5 +12,4 @@ message Msg {
   bytes content = 3;
   string senderName = 4;
   string type = 5;
-
 }

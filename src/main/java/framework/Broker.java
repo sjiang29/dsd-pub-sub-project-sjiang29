@@ -37,6 +37,16 @@ public class Broker {
         }
     }
 
+    public void startBroker(){
+        boolean isListening = true;
+        while(isListening){
+            Connection connection = this.buildNewConnection();
+            this.updateConnections(connection);
+            Thread connectionHandler = new Thread(new ConnectionHandler(connection));
+            connectionHandler.start();
+        }
+    }
+
     public void startReceiver(){
         boolean isListening = true;
         while(isListening){
@@ -104,7 +114,7 @@ public class Broker {
                         }
                         subscribers.add(sender);
                         subscriberList.put(subscribedTopic, subscribers);
-                    } else if (sender.contains("producer")) {
+                    } else if(sender.contains("producer")) {
                         String publishedTopic = receivedMsg.getTopic();
                         ArrayList<MsgInfo.Msg> messages = msgLists.get(publishedTopic);
                         if(messages == null){
@@ -118,6 +128,19 @@ public class Broker {
                     e.printStackTrace();
                 }
             }
+
+        }
+    }
+
+    class Sender implements Runnable{
+        private Connection connection;
+
+        public Sender(Connection connection) {
+            this.connection = connection;
+        }
+
+        @Override
+        public void run() {
 
         }
     }
