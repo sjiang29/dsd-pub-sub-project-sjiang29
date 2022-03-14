@@ -91,6 +91,56 @@ public class Broker {
         return connection;
     }
 
+    class ConnectionHandler implements Runnable{
+        private Connection connection;
+
+        public ConnectionHandler(Connection connection) {
+            this.connection = connection;
+        }
+
+        @Override
+        public void run() {
+            boolean isRunning = true;
+            while(isRunning){
+                byte[] receivedBytes = this.connection.receive();
+                try {
+                    MsgInfo.Msg receivedMsg = MsgInfo.Msg.parseFrom(receivedBytes);
+                    String sender = receivedMsg.getSenderName();
+                    String type = receivedMsg.getType();
+                    int startingPosition = receivedMsg.getStartingPosition();
+
+                    if(type.equals("subscribe") && sender.contains("consumer")){
+                        String subscribedTopic = receivedMsg.getTopic();
+                        ArrayList<String> subscribers = subscriberList.get(subscribedTopic);
+                        if(subscribers == null){
+                            subscribers = new ArrayList<>();
+                        }
+                        subscribers.add(sender);
+                        subscriberList.put(subscribedTopic, subscribers);
+
+                        ArrayList<MsgInfo.Msg> requiredMsgList = msgLists.get(subscribedTopic);
+                        // send Msg one by one
+                        for(int i = startingPosition; i < requiredMsgList.size(); i++){
+                            byte[] requiredMsg = requiredMsgList.get(i).toByteArray();
+                            this.connection.send(requiredMsg);
+                        }
+                    } else if(sender.contains("producer")) {
+                        String publishedTopic = receivedMsg.getTopic();
+                        ArrayList<MsgInfo.Msg> messages = msgLists.get(publishedTopic);
+                        if(messages == null){
+                            messages = new ArrayList<>();
+                        }
+                        messages.add(receivedMsg);
+                        msgLists.put(publishedTopic, messages);
+                    }
+
+                } catch (InvalidProtocolBufferException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+    }
     class Receiver implements Runnable{
         private Connection connection;
 
@@ -132,16 +182,5 @@ public class Broker {
         }
     }
 
-    class Sender implements Runnable{
-        private Connection connection;
 
-        public Sender(Connection connection) {
-            this.connection = connection;
-        }
-
-        @Override
-        public void run() {
-
-        }
-    }
 }

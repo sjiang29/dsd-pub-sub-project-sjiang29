@@ -12,4 +12,5 @@ message Msg {
   bytes content = 3;
   string senderName = 4;
   string type = 5;
+  int32 startingPosition = 6;
 }

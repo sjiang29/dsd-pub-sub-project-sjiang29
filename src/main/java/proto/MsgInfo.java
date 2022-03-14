@@ -63,6 +63,12 @@ public final class MsgInfo {
      */
     com.google.protobuf.ByteString
         getTypeBytes();
+
+    /**
+     * <code>int32 startingPosition = 6;</code>
+     * @return The startingPosition.
+     */
+    int getStartingPosition();
   }
   /**
    * Protobuf type {@code Msg}
@@ -139,6 +145,11 @@ public final class MsgInfo {
               java.lang.String s = input.readStringRequireUtf8();
 
               type_ = s;
+              break;
+            }
+            case 48: {
+
+              startingPosition_ = input.readInt32();
               break;
             }
             default: {
@@ -309,6 +320,17 @@ public final class MsgInfo {
       }
     }
 
+    public static final int STARTINGPOSITION_FIELD_NUMBER = 6;
+    private int startingPosition_;
+    /**
+     * <code>int32 startingPosition = 6;</code>
+     * @return The startingPosition.
+     */
+    @java.lang.Override
+    public int getStartingPosition() {
+      return startingPosition_;
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -338,6 +360,9 @@ public final class MsgInfo {
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(type_)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 5, type_);
       }
+      if (startingPosition_ != 0) {
+        output.writeInt32(6, startingPosition_);
+      }
       unknownFields.writeTo(output);
     }
 
@@ -364,6 +389,10 @@ public final class MsgInfo {
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(type_)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, type_);
       }
+      if (startingPosition_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(6, startingPosition_);
+      }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
       return size;
@@ -389,6 +418,8 @@ public final class MsgInfo {
           .equals(other.getSenderName())) return false;
       if (!getType()
           .equals(other.getType())) return false;
+      if (getStartingPosition()
+          != other.getStartingPosition()) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -410,6 +441,8 @@ public final class MsgInfo {
       hash = (53 * hash) + getSenderName().hashCode();
       hash = (37 * hash) + TYPE_FIELD_NUMBER;
       hash = (53 * hash) + getType().hashCode();
+      hash = (37 * hash) + STARTINGPOSITION_FIELD_NUMBER;
+      hash = (53 * hash) + getStartingPosition();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -553,6 +586,8 @@ public final class MsgInfo {
 
         type_ = "";
 
+        startingPosition_ = 0;
+
         return this;
       }
 
@@ -584,6 +619,7 @@ public final class MsgInfo {
         result.content_ = content_;
         result.senderName_ = senderName_;
         result.type_ = type_;
+        result.startingPosition_ = startingPosition_;
         onBuilt();
         return result;
       }
@@ -649,6 +685,9 @@ public final class MsgInfo {
         if (!other.getType().isEmpty()) {
           type_ = other.type_;
           onChanged();
+        }
+        if (other.getStartingPosition() != 0) {
+          setStartingPosition(other.getStartingPosition());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -971,6 +1010,37 @@ public final class MsgInfo {
         onChanged();
         return this;
       }
+
+      private int startingPosition_ ;
+      /**
+       * <code>int32 startingPosition = 6;</code>
+       * @return The startingPosition.
+       */
+      @java.lang.Override
+      public int getStartingPosition() {
+        return startingPosition_;
+      }
+      /**
+       * <code>int32 startingPosition = 6;</code>
+       * @param value The startingPosition to set.
+       * @return This builder for chaining.
+       */
+      public Builder setStartingPosition(int value) {
+        
+        startingPosition_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int32 startingPosition = 6;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearStartingPosition() {
+        
+        startingPosition_ = 0;
+        onChanged();
+        return this;
+      }
       @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -1038,9 +1108,10 @@ public final class MsgInfo {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\tmsg.proto\"S\n\003Msg\022\n\n\002id\030\001 \001(\005\022\r\n\005topic\030" +
+      "\n\tmsg.proto\"m\n\003Msg\022\n\n\002id\030\001 \001(\005\022\r\n\005topic\030" +
       "\002 \001(\t\022\017\n\007content\030\003 \001(\014\022\022\n\nsenderName\030\004 \001" +
-      "(\t\022\014\n\004type\030\005 \001(\tB\tB\007MsgInfob\006proto3"
+      "(\t\022\014\n\004type\030\005 \001(\t\022\030\n\020startingPosition\030\006 \001" +
+      "(\005B\tB\007MsgInfob\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -1051,7 +1122,7 @@ public final class MsgInfo {
     internal_static_Msg_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_Msg_descriptor,
-        new java.lang.String[] { "Id", "Topic", "Content", "SenderName", "Type", });
+        new java.lang.String[] { "Id", "Topic", "Content", "SenderName", "Type", "StartingPosition", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)
