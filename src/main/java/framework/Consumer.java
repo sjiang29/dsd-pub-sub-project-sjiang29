@@ -1,5 +1,6 @@
 package framework;
 
+import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 import network.Connection;
 import network.FaultInjector;
@@ -15,7 +16,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-public class Consumer{
+public class Consumer implements Runnable{
     private String brokerName;
     private String consumerName;
     private Connection connection;
@@ -34,15 +35,15 @@ public class Consumer{
             FaultInjector fi = new LossyInjector(Config.lossRate);
             this.connection = new Connection(socket, fi);
             this.subscribedMsgQ = new LinkedBlockingQueue<>();
-            this.updateBlockingQ();
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public BlockingQueue<MsgInfo.Msg> getSubscribedMsgQ() {
-        return subscribedMsgQ;
+    public void sendRequest(){
+        MsgInfo.Msg requestMsg = MsgInfo.Msg.newBuilder().setSenderName(this.brokerName).setStartingPosition(this.startingPosition).build();
+        this.connection.send(requestMsg.toByteArray());
     }
 
     public void updateBlockingQ(){
@@ -74,5 +75,9 @@ public class Consumer{
     }
 
 
-
+    @Override
+    public void run() {
+        this.sendRequest();
+        this.updateBlockingQ();
+    }
 }
