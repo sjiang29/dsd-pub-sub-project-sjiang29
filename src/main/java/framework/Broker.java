@@ -2,8 +2,6 @@ package framework;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import network.Connection;
-import network.FaultInjector;
-import network.LossyInjector;
 import proto.MsgInfo;
 import utils.Config;
 
@@ -47,17 +45,6 @@ public class Broker {
         }
     }
 
-    public void startReceiver(){
-        boolean isListening = true;
-        while(isListening){
-            Connection connection = this.buildNewConnection();
-            this.updateConnections(connection);
-
-            Thread receiver = new Thread(new Receiver(connection));
-            receiver.start();
-        }
-
-    }
 
     public void updateConnections(Connection connection){
         byte[] receivedBytes = connection.receive();
@@ -86,8 +73,8 @@ public class Broker {
             e.printStackTrace();
         }
         System.out.println("someone is calling");
-        FaultInjector fi = new LossyInjector(Config.lossRate);
-        Connection connection = new Connection(socket, fi);
+
+        Connection connection = new Connection(socket);
         return connection;
     }
 
@@ -105,17 +92,17 @@ public class Broker {
                 byte[] receivedBytes = this.connection.receive();
                 try {
                     MsgInfo.Msg receivedMsg = MsgInfo.Msg.parseFrom(receivedBytes);
-                    String sender = receivedMsg.getSenderName();
+                    String senderName = receivedMsg.getSenderName();
                     String type = receivedMsg.getType();
                     int startingPosition = receivedMsg.getStartingPosition();
 
-                    if(type.equals("subscribe") && sender.contains("consumer")){
+                    if(type.equals("subscribe") && senderName.contains("consumer")){
                         String subscribedTopic = receivedMsg.getTopic();
                         ArrayList<String> subscribers = subscriberList.get(subscribedTopic);
                         if(subscribers == null){
                             subscribers = new ArrayList<>();
                         }
-                        subscribers.add(sender);
+                        subscribers.add(senderName);
                         subscriberList.put(subscribedTopic, subscribers);
 
                         ArrayList<MsgInfo.Msg> requiredMsgList = msgLists.get(subscribedTopic);
@@ -124,7 +111,7 @@ public class Broker {
                             byte[] requiredMsg = requiredMsgList.get(i).toByteArray();
                             this.connection.send(requiredMsg);
                         }
-                    } else if(sender.contains("producer")) {
+                    } else if(type.equals("publish") && senderName.contains("producer")) {
                         String publishedTopic = receivedMsg.getTopic();
                         ArrayList<MsgInfo.Msg> messages = msgLists.get(publishedTopic);
                         if(messages == null){
@@ -141,6 +128,8 @@ public class Broker {
 
         }
     }
+
+
     class Receiver implements Runnable{
         private Connection connection;
 

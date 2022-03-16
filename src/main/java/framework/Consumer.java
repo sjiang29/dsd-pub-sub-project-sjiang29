@@ -1,17 +1,12 @@
 package framework;
 
-import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 import network.Connection;
-import network.FaultInjector;
-import network.LossyInjector;
 import proto.MsgInfo;
 import utils.Config;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -23,7 +18,7 @@ public class Consumer implements Runnable{
     private int startingPosition;
     private BlockingQueue<MsgInfo.Msg> subscribedMsgQ;
 
-    public Consumer(String brokerName, String consumerName, Connection connection, int startingPosition) {
+    public Consumer(String brokerName, String consumerName, int startingPosition) {
         this.brokerName = brokerName;
         this.consumerName = consumerName;
         this.startingPosition = startingPosition;
@@ -32,8 +27,7 @@ public class Consumer implements Runnable{
         int brokerPort = Config.hostList.get(brokerName).getPort();
         try {
             Socket socket = new Socket(brokerAddress, brokerPort);
-            FaultInjector fi = new LossyInjector(Config.lossRate);
-            this.connection = new Connection(socket, fi);
+            this.connection = new Connection(socket);
             this.subscribedMsgQ = new LinkedBlockingQueue<>();
 
         } catch (IOException e) {
@@ -42,7 +36,7 @@ public class Consumer implements Runnable{
     }
 
     public void sendRequest(){
-        MsgInfo.Msg requestMsg = MsgInfo.Msg.newBuilder().setSenderName(this.brokerName).setStartingPosition(this.startingPosition).build();
+        MsgInfo.Msg requestMsg = MsgInfo.Msg.newBuilder().setType("subscribe").setSenderName(this.brokerName).setStartingPosition(this.startingPosition).build();
         this.connection.send(requestMsg.toByteArray());
     }
 
@@ -73,7 +67,6 @@ public class Consumer implements Runnable{
         return polledMsg;
 
     }
-
 
     @Override
     public void run() {
