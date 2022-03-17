@@ -26,11 +26,14 @@ public class ConsumerHost {
         Consumer consumer1 = new Consumer("broker", "consumer1", topic1, 20);
         Thread t1 = new Thread(consumer1);
         t1.start();
-        saveToFile(consumer1, topic1File);
-        Consumer consumer2 = new Consumer("broker", "consumer2", topic2, 20);
-        Thread t2 = new Thread(consumer2);
+        Thread t2 = new Thread(() -> saveToFile(consumer1, topic1File));
         t2.start();
-        saveToFile(consumer2, topic2File);
+
+        Consumer consumer2 = new Consumer("broker", "consumer2", topic2, 20);
+        Thread t3 = new Thread(consumer2);
+        t3.start();
+        Thread t4 = new Thread(() -> saveToFile(consumer2, topic2File));
+        t4.start();
 
     }
 
