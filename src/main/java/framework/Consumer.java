@@ -15,12 +15,14 @@ public class Consumer implements Runnable{
     private String brokerName;
     private String consumerName;
     private Connection connection;
+    private String topic;
     private int startingPosition;
     private BlockingQueue<MsgInfo.Msg> subscribedMsgQ;
 
-    public Consumer(String brokerName, String consumerName, int startingPosition) {
+    public Consumer(String brokerName, String consumerName, String topic, int startingPosition) {
         this.brokerName = brokerName;
         this.consumerName = consumerName;
+        this.topic = topic;
         this.startingPosition = startingPosition;
 
         String brokerAddress = Config.hostList.get(this.brokerName).getHostAddress();
@@ -36,7 +38,7 @@ public class Consumer implements Runnable{
     }
 
     public void sendRequest(){
-        MsgInfo.Msg requestMsg = MsgInfo.Msg.newBuilder().setType("subscribe").setSenderName(this.brokerName).setStartingPosition(this.startingPosition).build();
+        MsgInfo.Msg requestMsg = MsgInfo.Msg.newBuilder().setType("subscribe").setTopic(this.topic).setSenderName(this.brokerName).setStartingPosition(this.startingPosition).build();
         this.connection.send(requestMsg.toByteArray());
     }
 

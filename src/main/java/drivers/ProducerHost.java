@@ -8,8 +8,6 @@ import java.nio.charset.StandardCharsets;
 
 public class ProducerHost {
 
-
-
     public static void main(String args[]){
         if (args.length != 4){
             System.out.println("Usage of the application is: java drivers ProducerHost <hostName> ");
