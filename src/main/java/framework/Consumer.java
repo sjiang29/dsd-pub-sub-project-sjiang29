@@ -10,6 +10,7 @@ import java.net.Socket;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
+import static framework.Broker.logger;
 
 public class Consumer implements Runnable{
     private String brokerName;
@@ -38,7 +39,7 @@ public class Consumer implements Runnable{
     }
 
     public void sendRequest(){
-        MsgInfo.Msg requestMsg = MsgInfo.Msg.newBuilder().setType("subscribe").setTopic(this.topic).setSenderName(this.brokerName).setStartingPosition(this.startingPosition).build();
+        MsgInfo.Msg requestMsg = MsgInfo.Msg.newBuilder().setType("subscribe").setTopic(this.topic).setSenderName(this.consumerName).setStartingPosition(this.startingPosition).build();
         this.connection.send(requestMsg.toByteArray());
     }
 
@@ -48,9 +49,11 @@ public class Consumer implements Runnable{
             byte[] receivedBytes = this.connection.receive();
             try {
                 MsgInfo.Msg receivedMsg = MsgInfo.Msg.parseFrom(receivedBytes);
-                if(receivedMsg.getType().contains("stop")){
+                if(receivedMsg.getType().equals("unavailable")){
+                    this.sendRequest();
+                }else if(receivedMsg.getType().contains("stop")){
                     isReceiving = false;
-                }else {
+                }else if(receivedMsg.getType().equals("result")) {
                     this.subscribedMsgQ.add(receivedMsg);
                 }
             } catch (InvalidProtocolBufferException e) {

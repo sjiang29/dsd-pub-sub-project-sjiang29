@@ -8,6 +8,7 @@ import utils.Config;
 import java.io.IOException;
 import java.net.Socket;
 
+import static framework.Broker.logger;
 public class Producer {
     private String brokerName;
     private String producerName;

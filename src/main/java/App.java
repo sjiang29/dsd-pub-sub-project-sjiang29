@@ -1,20 +1,26 @@
 import framework.Broker;
 import framework.Consumer;
 import framework.Producer;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import proto.MsgInfo;
 import utils.Config;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import static framework.Broker.logger;
 
 public class App {
+
+
     public static void main(String[] args){
-        if (args.length != 3){
+        if (args.length != 1){
             System.out.println("Usage of the application is: java App <hostName> ");
             System.exit(1);
         }
 
-        String hostName = args[2];
+        String hostName = args[0];
+        logger.info("hostName: " + hostName);
         run(hostName);
 
     }
@@ -36,6 +42,7 @@ public class App {
 
     public static void dealProducer(String producerName){
         String file = Config.producerAndFile.get(producerName);
+        logger.info("App line 45: file" + file);
         Producer producer = new Producer("broker", producerName);
         runProducer(producer, file);
     }
@@ -46,6 +53,7 @@ public class App {
             String line;
 
             while ((line = br.readLine()) != null) {
+                logger.info("app 56" + line);
                 byte[] data = line.getBytes(StandardCharsets.UTF_8);
                 String topic = Config.topics.get(file);
                 producer.send(topic, data);
