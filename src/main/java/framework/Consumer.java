@@ -54,9 +54,10 @@ public class Consumer implements Runnable{
                 }else if(receivedMsg.getType().contains("stop")){
                     isReceiving = false;
                 }else if(receivedMsg.getType().equals("result")) {
-                    this.subscribedMsgQ.add(receivedMsg);
+                    logger.info("consumer line 57: received msg " + receivedMsg.getContent());
+                    this.subscribedMsgQ.put(receivedMsg);
                 }
-            } catch (InvalidProtocolBufferException e) {
+            } catch (InvalidProtocolBufferException | InterruptedException e) {
                 e.printStackTrace();
             }
         }

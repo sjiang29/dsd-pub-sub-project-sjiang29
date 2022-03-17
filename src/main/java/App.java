@@ -70,8 +70,8 @@ public class App {
     }
 
     public static void dealConsumer(String consumerName){
-        String topic1File = "/Users/sj/Desktop/Distributed Software Dev/Projects/p2/p.log";
-        String topic2File = "/Users/sj/Desktop/Distributed Software Dev/Projects/p2/z.log";
+        String topic1File = "/Users/sj/Desktop/Distributed Software Dev/Projects/p2/p.txt";
+        String topic2File = "/Users/sj/Desktop/Distributed Software Dev/Projects/p2/z.txt";
 
         String topic1 = Config.topic1;
         String topic2 = Config.topic2;
@@ -87,18 +87,38 @@ public class App {
         t3.start();
         Thread t4 = new Thread(() -> saveToFile(consumer2, topic2File));
         t4.start();
+
+        try{
+            t1.join();
+            t2.join();
+            t3.join();
+            t4.join();
+        }catch(InterruptedException e){
+            System.out.println(e);
+        }
+
     }
 
     public static void saveToFile(Consumer consumer, String file){
+        PrintWriter pw = null;
         try {
-            PrintWriter pw = new PrintWriter(file);
+            FileWriter fileWriter = new FileWriter(file);
+            pw = new PrintWriter(fileWriter);
             while(true){
                 MsgInfo.Msg msg = consumer.poll(100);
-                String line = String.valueOf(msg.getContent());
-                pw.println(line);
+                if(msg != null){
+                    String line = String.valueOf(msg.getContent());
+                    logger.info("app line 99 " + line);
+                    pw.println(line);
+                }
             }
+
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            if(pw != null){
+                pw.close();
+            }
         }
     }
 }

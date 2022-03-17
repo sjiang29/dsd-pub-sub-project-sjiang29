@@ -122,6 +122,7 @@ public class Broker {
                             MsgInfo.Msg requiredMsg;
                             for(int i = startingPosition; i < requiredMsgList.size(); i++){
                                 requiredMsg = MsgInfo.Msg.newBuilder().setType("result").setContent(requiredMsgList.get(i).getContent()).build();
+                                logger.info("broker 125, response msg : " + requiredMsg.getContent());
                                 this.connection.send(requiredMsg.toByteArray());
                             }
                             MsgInfo.Msg stopMsg = MsgInfo.Msg.newBuilder().setType("stop").build();
@@ -130,7 +131,7 @@ public class Broker {
 
                     } else if(type.equals("publish") && senderName.contains("producer")) {
                         String publishedTopic = receivedMsg.getTopic();
-                        logger.info("broker line 123: publishedTopic + " + publishedTopic);
+                        logger.info("broker line 133: publishedTopic + " + publishedTopic);
                         ArrayList<MsgInfo.Msg> messages = msgLists.get(publishedTopic);
                         if(messages == null){
                             messages = new ArrayList<>();

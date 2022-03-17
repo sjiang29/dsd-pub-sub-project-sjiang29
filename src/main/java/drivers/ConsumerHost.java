@@ -17,8 +17,8 @@ public class ConsumerHost {
         }
 
         String consumerHostName = args[3];
-        String topic1File = "/Users/sj/Desktop/Distributed Software Dev/Projects/p2/p.log";
-        String topic2File = "/Users/sj/Desktop/Distributed Software Dev/Projects/p2/z.log";
+        String topic1File = "/Users/sj/Desktop/Distributed Software Dev/Projects/p2/p.txt";
+        String topic2File = "/Users/sj/Desktop/Distributed Software Dev/Projects/p2/z.txt";
 
         String topic1 = Config.topic1;
         String topic2 = Config.topic2;
