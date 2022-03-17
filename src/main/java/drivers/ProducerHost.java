@@ -31,7 +31,6 @@ public class ProducerHost {
                 producer.send(topic, data);
 
             }
-
             producer.close();
 
         }catch (FileNotFoundException e) {

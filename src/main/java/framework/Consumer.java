@@ -75,4 +75,8 @@ public class Consumer implements Runnable{
         this.sendRequest();
         this.updateBlockingQ();
     }
+
+    public void close(){
+        this.connection.close();
+    }
 }

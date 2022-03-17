@@ -145,7 +145,7 @@ public class Broker {
                     MsgInfo.Msg receivedMsg = MsgInfo.Msg.parseFrom(receivedBytes);
                     String sender = receivedMsg.getSenderName();
                     String type = receivedMsg.getType();
-                    if(type.equals("subscribe") && sender.contains("consumer")){
+                    if (type.equals("subscribe") && sender.contains("consumer")) {
                         String subscribedTopic = receivedMsg.getTopic();
                         ArrayList<String> subscribers = subscriberList.get(subscribedTopic);
                         if(subscribers == null){
@@ -162,7 +162,6 @@ public class Broker {
                         messages.add(receivedMsg);
                         msgLists.put(publishedTopic, messages);
                     }
-
                 } catch (InvalidProtocolBufferException e) {
                     e.printStackTrace();
                 }
