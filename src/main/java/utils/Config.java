@@ -26,6 +26,7 @@ public class Config {
     {{ put(host1.getHostName(), host1); put(host2.getHostName(), host2); put(host3.getHostName(), host3);
         put(host4.getHostName(), host4); put(host5.getHostName(), host5); put(host6.getHostName(), host6);}};
 
+    //
     public static final String file1 = "/Users/sj/Desktop/Distributed Software Dev/Projects/p2/proxifier1.log";
     public static final String file2 = "/Users/sj/Desktop/Distributed Software Dev/Projects/p2/proxifier2.log";
     public static final String file3 = "/Users/sj/Desktop/Distributed Software Dev/Projects/p2/zookeeper1.log";
@@ -33,6 +34,12 @@ public class Config {
         put(host2.getHostName(), file1); put(host3.getHostName(), file2); put(host4.getHostName(), file3);
     }};
 
+    //
+    public static final String topic1 = "proxifier";
+    public static final String topic2 = "zookeeper";
+    public static final HashMap<String, String> topics = new HashMap<>(){{
+        put(file1, topic1); put(file2, topic1); put(file3, topic2);
+    }};
 
 
 
