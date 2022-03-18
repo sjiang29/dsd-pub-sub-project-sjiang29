@@ -53,7 +53,7 @@ public class App {
             String line;
 
             while ((line = br.readLine()) != null) {
-                logger.info("app 56" + line);
+                logger.info("app 56 published line: " + line);
                 byte[] data = line.getBytes(StandardCharsets.UTF_8);
                 String topic = Config.topics.get(file);
                 producer.send(topic, data);
@@ -76,13 +76,13 @@ public class App {
         String topic1 = Config.topic1;
         String topic2 = Config.topic2;
 
-        Consumer consumer1 = new Consumer("broker", "consumer1", topic1, 20);
+        Consumer consumer1 = new Consumer("broker", "consumer1", topic1, 0);
         Thread t1 = new Thread(consumer1);
         t1.start();
         Thread t2 = new Thread(() -> saveToFile(consumer1, topic1File));
         t2.start();
 
-        Consumer consumer2 = new Consumer("broker", "consumer2", topic2, 20);
+        Consumer consumer2 = new Consumer("broker", "consumer2", topic2, 0);
         Thread t3 = new Thread(consumer2);
         t3.start();
         Thread t4 = new Thread(() -> saveToFile(consumer2, topic2File));
@@ -106,11 +106,16 @@ public class App {
             pw = new PrintWriter(fileWriter);
             while(true){
                 MsgInfo.Msg msg = consumer.poll(100);
+
                 if(msg != null){
-                    String line = String.valueOf(msg.getContent());
-                    logger.info("app line 99 " + line);
+                    // String.valueOf doesn't not work
+                    String line = new String(msg.getContent().toByteArray());
+                    logger.info("app line 112 " + line);
                     pw.println(line);
+
                 }
+                // important to flush
+                pw.flush();
             }
 
         } catch (IOException e) {
