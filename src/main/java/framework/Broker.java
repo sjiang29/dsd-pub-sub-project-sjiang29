@@ -14,11 +14,12 @@ import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
 
-
 public class Broker {
     public static  Logger logger = LogManager.getLogger();
     private String brokerName;
     private ServerSocket server;
+    private int brokerPort;
+    private boolean isRunning;
     // key is topic, value is msg list of corresponding topic
     private ConcurrentHashMap<String, ArrayList<MsgInfo.Msg>> msgLists;
     // key is topic, value is list of consumers who subscribe this topic
@@ -29,22 +30,35 @@ public class Broker {
     public Broker(String brokerName) {
         this.brokerName = brokerName;
         this.msgLists = new ConcurrentHashMap<>();
-        int brokerPort = Config.hostList.get(brokerName).getPort();
+        this.isRunning = true;
+        this.brokerPort = Config.hostList.get(brokerName).getPort();
         try {
             //starting broker server
-            this.server = new ServerSocket(brokerPort);
+            this.server = new ServerSocket(this.brokerPort);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    public int getBrokerPort() {
+        return brokerPort;
+    }
+
+    public ConcurrentHashMap<String, ArrayList<MsgInfo.Msg>> getMsgLists() {
+        return msgLists;
+    }
+
     public void startBroker(){
-        boolean isListening = true;
-        while(isListening){
+        this.isRunning = true;
+        while(this.isRunning){
             Connection connection = this.buildNewConnection();
             Thread connectionHandler = new Thread(new ConnectionHandler(connection));
             connectionHandler.start();
         }
+    }
+
+    public void shutDownBroker(){
+        this.isRunning = false;
     }
 
     /**
@@ -75,7 +89,7 @@ public class Broker {
 
         @Override
         public void run() {
-            boolean isRunning = true;
+            //boolean isRunning = true;
             while(isRunning){
                 byte[] receivedBytes = this.connection.receive();
                 try {

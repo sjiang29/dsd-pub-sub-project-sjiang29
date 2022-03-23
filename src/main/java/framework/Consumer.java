@@ -27,7 +27,7 @@ public class Consumer implements Runnable{
         this.startingPosition = startingPosition;
 
         String brokerAddress = Config.hostList.get(this.brokerName).getHostAddress();
-        int brokerPort = Config.hostList.get(brokerName).getPort();
+        int brokerPort = Config.hostList.get(this.brokerName).getPort();
         try {
             Socket socket = new Socket(brokerAddress, brokerPort);
             this.connection = new Connection(socket);
@@ -39,8 +39,9 @@ public class Consumer implements Runnable{
     }
 
     public void sendRequest(int startingPoint){
+        int requiredMsgCount = 20;
         MsgInfo.Msg requestMsg = MsgInfo.Msg.newBuilder().setType("subscribe").setTopic(this.topic).setSenderName(this.consumerName)
-                .setStartingPosition(startingPoint).setRequiredMsgCount(20).build();
+                .setStartingPosition(startingPoint).setRequiredMsgCount(requiredMsgCount).build();
         this.connection.send(requestMsg.toByteArray());
     }
 
@@ -75,7 +76,6 @@ public class Consumer implements Runnable{
             e.printStackTrace();
         }
         return polledMsg;
-
     }
 
     @Override
@@ -83,7 +83,7 @@ public class Consumer implements Runnable{
         int startingPoint = this.startingPosition;
         while(this.connection.isOpen() && startingPoint >= 0){
             try {
-                Thread.sleep(300);
+                Thread.sleep(200);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
