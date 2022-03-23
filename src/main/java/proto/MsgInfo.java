@@ -69,6 +69,12 @@ public final class MsgInfo {
      * @return The startingPosition.
      */
     int getStartingPosition();
+
+    /**
+     * <code>int32 requiredMsgCount = 7;</code>
+     * @return The requiredMsgCount.
+     */
+    int getRequiredMsgCount();
   }
   /**
    * Protobuf type {@code Msg}
@@ -150,6 +156,11 @@ public final class MsgInfo {
             case 48: {
 
               startingPosition_ = input.readInt32();
+              break;
+            }
+            case 56: {
+
+              requiredMsgCount_ = input.readInt32();
               break;
             }
             default: {
@@ -331,6 +342,17 @@ public final class MsgInfo {
       return startingPosition_;
     }
 
+    public static final int REQUIREDMSGCOUNT_FIELD_NUMBER = 7;
+    private int requiredMsgCount_;
+    /**
+     * <code>int32 requiredMsgCount = 7;</code>
+     * @return The requiredMsgCount.
+     */
+    @java.lang.Override
+    public int getRequiredMsgCount() {
+      return requiredMsgCount_;
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -363,6 +385,9 @@ public final class MsgInfo {
       if (startingPosition_ != 0) {
         output.writeInt32(6, startingPosition_);
       }
+      if (requiredMsgCount_ != 0) {
+        output.writeInt32(7, requiredMsgCount_);
+      }
       unknownFields.writeTo(output);
     }
 
@@ -393,6 +418,10 @@ public final class MsgInfo {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(6, startingPosition_);
       }
+      if (requiredMsgCount_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(7, requiredMsgCount_);
+      }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
       return size;
@@ -420,6 +449,8 @@ public final class MsgInfo {
           .equals(other.getType())) return false;
       if (getStartingPosition()
           != other.getStartingPosition()) return false;
+      if (getRequiredMsgCount()
+          != other.getRequiredMsgCount()) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -443,6 +474,8 @@ public final class MsgInfo {
       hash = (53 * hash) + getType().hashCode();
       hash = (37 * hash) + STARTINGPOSITION_FIELD_NUMBER;
       hash = (53 * hash) + getStartingPosition();
+      hash = (37 * hash) + REQUIREDMSGCOUNT_FIELD_NUMBER;
+      hash = (53 * hash) + getRequiredMsgCount();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -588,6 +621,8 @@ public final class MsgInfo {
 
         startingPosition_ = 0;
 
+        requiredMsgCount_ = 0;
+
         return this;
       }
 
@@ -620,6 +655,7 @@ public final class MsgInfo {
         result.senderName_ = senderName_;
         result.type_ = type_;
         result.startingPosition_ = startingPosition_;
+        result.requiredMsgCount_ = requiredMsgCount_;
         onBuilt();
         return result;
       }
@@ -688,6 +724,9 @@ public final class MsgInfo {
         }
         if (other.getStartingPosition() != 0) {
           setStartingPosition(other.getStartingPosition());
+        }
+        if (other.getRequiredMsgCount() != 0) {
+          setRequiredMsgCount(other.getRequiredMsgCount());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -1041,6 +1080,37 @@ public final class MsgInfo {
         onChanged();
         return this;
       }
+
+      private int requiredMsgCount_ ;
+      /**
+       * <code>int32 requiredMsgCount = 7;</code>
+       * @return The requiredMsgCount.
+       */
+      @java.lang.Override
+      public int getRequiredMsgCount() {
+        return requiredMsgCount_;
+      }
+      /**
+       * <code>int32 requiredMsgCount = 7;</code>
+       * @param value The requiredMsgCount to set.
+       * @return This builder for chaining.
+       */
+      public Builder setRequiredMsgCount(int value) {
+        
+        requiredMsgCount_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int32 requiredMsgCount = 7;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearRequiredMsgCount() {
+        
+        requiredMsgCount_ = 0;
+        onChanged();
+        return this;
+      }
       @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -1108,10 +1178,11 @@ public final class MsgInfo {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\tmsg.proto\"m\n\003Msg\022\n\n\002id\030\001 \001(\005\022\r\n\005topic\030" +
-      "\002 \001(\t\022\017\n\007content\030\003 \001(\014\022\022\n\nsenderName\030\004 \001" +
-      "(\t\022\014\n\004type\030\005 \001(\t\022\030\n\020startingPosition\030\006 \001" +
-      "(\005B\tB\007MsgInfob\006proto3"
+      "\n\tmsg.proto\"\207\001\n\003Msg\022\n\n\002id\030\001 \001(\005\022\r\n\005topic" +
+      "\030\002 \001(\t\022\017\n\007content\030\003 \001(\014\022\022\n\nsenderName\030\004 " +
+      "\001(\t\022\014\n\004type\030\005 \001(\t\022\030\n\020startingPosition\030\006 " +
+      "\001(\005\022\030\n\020requiredMsgCount\030\007 \001(\005B\tB\007MsgInfo" +
+      "b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -1122,7 +1193,7 @@ public final class MsgInfo {
     internal_static_Msg_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_Msg_descriptor,
-        new java.lang.String[] { "Id", "Topic", "Content", "SenderName", "Type", "StartingPosition", });
+        new java.lang.String[] { "Id", "Topic", "Content", "SenderName", "Type", "StartingPosition", "RequiredMsgCount", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

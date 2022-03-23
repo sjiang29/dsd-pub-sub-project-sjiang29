@@ -38,29 +38,33 @@ public class Consumer implements Runnable{
         }
     }
 
-    public void sendRequest(){
-        MsgInfo.Msg requestMsg = MsgInfo.Msg.newBuilder().setType("subscribe").setTopic(this.topic).setSenderName(this.consumerName).setStartingPosition(this.startingPosition).build();
+    public void sendRequest(int startingPoint){
+        MsgInfo.Msg requestMsg = MsgInfo.Msg.newBuilder().setType("subscribe").setTopic(this.topic).setSenderName(this.consumerName)
+                .setStartingPosition(startingPoint).setRequiredMsgCount(20).build();
         this.connection.send(requestMsg.toByteArray());
     }
 
-    public void updateBlockingQ(){
+    public int updateBlockingQ(int startingPoint){
+        int receivedMsgCount = 0;
         boolean isReceiving = true;
         while(isReceiving){
             byte[] receivedBytes = this.connection.receive();
             try {
                 MsgInfo.Msg receivedMsg = MsgInfo.Msg.parseFrom(receivedBytes);
                 if(receivedMsg.getType().equals("unavailable")){
-                    this.sendRequest();
+                    this.sendRequest(startingPoint);
                 }else if(receivedMsg.getType().contains("stop")){
                     isReceiving = false;
                 }else if(receivedMsg.getType().equals("result")) {
                     logger.info("consumer line 57: received msg " + receivedMsg.getContent());
+                    receivedMsgCount = receivedMsgCount + 1;
                     this.subscribedMsgQ.put(receivedMsg);
                 }
             } catch (InvalidProtocolBufferException | InterruptedException e) {
                 e.printStackTrace();
             }
         }
+        return receivedMsgCount;
     }
 
     public MsgInfo.Msg poll(int timeOut){
@@ -76,8 +80,18 @@ public class Consumer implements Runnable{
 
     @Override
     public void run() {
-        this.sendRequest();
-        this.updateBlockingQ();
+        int startingPoint = this.startingPosition;
+        while(this.connection.isOpen() && startingPoint >= 0){
+            try {
+                Thread.sleep(300);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            this.sendRequest(startingPoint);
+            int receivedMsgCount = this.updateBlockingQ(startingPoint);
+            startingPoint = startingPoint + receivedMsgCount;
+        }
+
     }
 
     public void close(){
