@@ -100,9 +100,11 @@ public class Broker {
             this.connection = connection;
         }
 
+        /**
+         * Runnable interface method
+         */
         @Override
         public void run() {
-            //boolean isRunning = true;
             while(isRunning){
                 byte[] receivedBytes = this.connection.receive();
                 try {
@@ -124,6 +126,7 @@ public class Broker {
 
         /**
          * Helper method to deal consumer's request
+         * @param receivedMsg
          */
         private void dealConsumerReq(MsgInfo.Msg receivedMsg) {
             String subscribedTopic = receivedMsg.getTopic();
@@ -153,6 +156,7 @@ public class Broker {
 
         /**
          * Helper method to deal producer's request
+         * @param receivedMsg
          */
         private void dealProducerReq(MsgInfo.Msg receivedMsg){
             String publishedTopic = receivedMsg.getTopic();
