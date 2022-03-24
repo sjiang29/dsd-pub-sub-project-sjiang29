@@ -76,7 +76,7 @@ public class Consumer implements Runnable{
                 }else if(receivedMsg.getType().contains("stop")){
                     isReceiving = false;
                 }else if(receivedMsg.getType().equals("result")) {
-                    logger.info("consumer line 57: received msg " + receivedMsg.getContent());
+                    logger.info("consumer line 79: received msg " + new String(receivedMsg.getContent().toByteArray()));
                     receivedMsgCount = receivedMsgCount + 1;
                     this.subscribedMsgQ.put(receivedMsg);
                 }

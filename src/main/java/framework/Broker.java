@@ -149,7 +149,7 @@ public class Broker {
                 }
                 for(int i = startingPosition; i < endPoint; i++){
                     requiredMsg = MsgInfo.Msg.newBuilder().setType("result").setContent(requiredMsgList.get(i).getContent()).build();
-                    logger.info("broker 144, response msg : " + new String(receivedMsg.getContent().toByteArray()));
+                    logger.info("broker 144, response msg : " + new String(requiredMsg.getContent().toByteArray()));
                     this.connection.send(requiredMsg.toByteArray());
                 }
                 MsgInfo.Msg stopMsg = MsgInfo.Msg.newBuilder().setType("stop").build();
