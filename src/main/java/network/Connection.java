@@ -6,13 +6,12 @@ import java.io.IOException;
 import java.net.Socket;
 
 /**
- * Parent class: network.Connection, which has two children: DefaultConnection and network.LossyConnection
+ * Connection class:  A wrapper to wrap a socket into a Connection object
  */
 public class Connection implements Receiver, Sender {
 
     private Socket socket;
     private boolean isOpen;
-
 
 
     /**
@@ -26,15 +25,22 @@ public class Connection implements Receiver, Sender {
         } else {
             this.isOpen = false;
         }
-
     }
 
+    /**
+     * Getter to check if the connection is open
+     * @return
+     */
     public boolean isOpen() {
-        return isOpen;
+        return this.isOpen;
     }
 
+    /**
+     * Setter to set the open status of the connection
+     * @param open
+     */
     public void setOpen(boolean open) {
-        isOpen = open;
+        this.isOpen = open;
     }
 
     // For receive and send method, use reference https://stackoverflow.com/questions/1176135/socket-send-and-receive-byte-array
@@ -80,8 +86,9 @@ public class Connection implements Receiver, Sender {
         return false;
     }
 
-
-
+    /**
+     * Method for closing a connection
+     */
     public void close(){
         try {
             this.socket.close();

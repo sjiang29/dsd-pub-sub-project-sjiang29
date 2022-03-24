@@ -42,6 +42,10 @@ public class AutoTests {
         Assertions.assertNotEquals(msg, sentContent);
     }
 
+    /**
+     * Test method to write to a file is correct
+     *
+     */
     @Test
     public void testWriteToFile(){
         String sentFilePath = "sent.txt";
@@ -71,12 +75,21 @@ public class AutoTests {
             Assertions.assertEquals(getCheckSum(sentFilePath), getCheckSum(receivedFilePath));
         }
     }
+
+    /**
+     * Test broker is set correctly
+     *
+     */
     @Test
     public void testBroker1(){
         Broker broker = new Broker("broker");
         Assertions.assertEquals(broker.getBrokerPort(), Config.hostList.get("broker").getPort());
     }
 
+    /**
+     * Test config is set correctly
+     *
+     */
     @Test
     public void testConfig1(){
         Assertions.assertEquals(Config.hostList.size(), 7);
