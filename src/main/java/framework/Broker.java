@@ -132,7 +132,7 @@ public class Broker {
             String subscribedTopic = receivedMsg.getTopic();
             int startingPosition = receivedMsg.getStartingPosition();
             int requiredMsgCount = receivedMsg.getRequiredMsgCount();
-            logger.info("broker line 133: subscribedTopic + " + subscribedTopic);
+            logger.info("broker line 133: subscribedTopic: " + subscribedTopic);
 
             ArrayList<MsgInfo.Msg> requiredMsgList = msgLists.get(subscribedTopic);
             if(requiredMsgList == null){
@@ -149,7 +149,7 @@ public class Broker {
                 }
                 for(int i = startingPosition; i < endPoint; i++){
                     requiredMsg = MsgInfo.Msg.newBuilder().setType("result").setContent(requiredMsgList.get(i).getContent()).build();
-                    logger.info("broker 144, response msg : " + requiredMsg.getContent());
+                    logger.info("broker 144, response msg : " + new String(receivedMsg.getContent().toByteArray()));
                     this.connection.send(requiredMsg.toByteArray());
                 }
                 MsgInfo.Msg stopMsg = MsgInfo.Msg.newBuilder().setType("stop").build();
