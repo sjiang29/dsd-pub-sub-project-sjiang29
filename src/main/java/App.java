@@ -82,12 +82,15 @@ public class App {
             while ((line = br.readLine()) != null) {
                 logger.info("app 81 published line: " + line);
                 byte[] data = line.getBytes(StandardCharsets.UTF_8);
+                Thread.sleep(100);
                 producer.send(topic, data);
             }
             producer.close();
         }catch (FileNotFoundException e) {
             System.out.println("File does not exist!");
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
