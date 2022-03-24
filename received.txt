@@ -1,0 +1,9 @@
+[07.27 10:32:28] chrome.exe *64 - manhua.163.com:443 close, 10268 bytes (10.0 KB) sent, 100125 bytes (97.7 KB) received, lifetime 00:08
+[07.27 10:32:28] chrome.exe *64 - manhua.163.com:443 close, 11482 bytes (11.2 KB) sent, 11469 bytes (11.2 KB) received, lifetime 00:08
+[07.27 10:32:28] chrome.exe *64 - nos.netease.com:443 close, 4270 bytes (4.16 KB) sent, 411110 bytes (401 KB) received, lifetime 00:06
+[07.27 10:32:28] chrome.exe *64 - nos.netease.com:443 close, 4964 bytes (4.84 KB) sent, 866282 bytes (845 KB) received, lifetime 00:08
+[07.27 10:32:28] chrome.exe *64 - nos.netease.com:443 close, 3657 bytes (3.57 KB) sent, 409243 bytes (399 KB) received, lifetime 00:08
+[07.27 10:32:28] chrome.exe *64 - nos.netease.com:443 close, 5579 bytes (5.44 KB) sent, 778846 bytes (760 KB) received, lifetime 00:08
+[07.27 10:32:29] chrome.exe *64 - manhua.163.com:443 close, 16315 bytes (15.9 KB) sent, 16055 bytes (15.6 KB) received, lifetime 00:09
+[07.27 10:32:29] chrome.exe *64 - manhua.163.com:443 close, 11971 bytes (11.6 KB) sent, 18220 bytes (17.7 KB) received, lifetime 00:09
+[07.27 10:32:36] chrome.exe *64 - pcookie.cnzz.com:80 close, 0 bytes sent, 0 bytes received, lifetime 00:15
