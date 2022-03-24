@@ -23,7 +23,7 @@ public class App {
      */
     public static void main(String[] args){
         if (args.length != 2){
-            System.out.println("Usage of the application is:  java -cp p2.jar App <hostName> ");
+            System.out.println("Usage of the application is:  java -cp p2.jar App <hostName> <startingPosition> ");
             System.exit(1);
         }
 
