@@ -135,7 +135,10 @@ public class Broker {
             logger.info("broker line 133: subscribedTopic + " + subscribedTopic);
 
             ArrayList<MsgInfo.Msg> requiredMsgList = msgLists.get(subscribedTopic);
-            if(requiredMsgList != null){
+            if(requiredMsgList == null){
+                MsgInfo.Msg responseMsg = MsgInfo.Msg.newBuilder().setType("unavailable").setSenderName(brokerName).build();
+                this.connection.send(responseMsg.toByteArray());
+            }else{
                 // send Msg one by one
                 MsgInfo.Msg requiredMsg;
                 int endPoint;

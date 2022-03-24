@@ -64,14 +64,16 @@ public class Consumer implements Runnable{
      * @return see method description
      *
      */
-    public int updateBlockingQ(){
+    public int updateBlockingQ(int startingPoint){
         int receivedMsgCount = 0;
         boolean isReceiving = true;
         while(isReceiving){
             byte[] receivedBytes = this.connection.receive();
             try {
                 MsgInfo.Msg receivedMsg = MsgInfo.Msg.parseFrom(receivedBytes);
-                if(receivedMsg.getType().contains("stop")){
+                if(receivedMsg.getType().equals("unavailable")){
+                    this.sendRequest(startingPoint);
+                }else if(receivedMsg.getType().contains("stop")){
                     isReceiving = false;
                 }else if(receivedMsg.getType().equals("result")) {
                     logger.info("consumer line 57: received msg " + receivedMsg.getContent());
@@ -115,7 +117,7 @@ public class Consumer implements Runnable{
                 e.printStackTrace();
             }
             this.sendRequest(startingPoint);
-            int receivedMsgCount = this.updateBlockingQ();
+            int receivedMsgCount = this.updateBlockingQ(startingPoint);
             startingPoint = startingPoint + receivedMsgCount;
         }
 
