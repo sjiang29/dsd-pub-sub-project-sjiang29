@@ -10,6 +10,5 @@
   - Retrieve messages using a pull-based approach by specifying a topic of interest and a starting position in the message stream.
 
 ## Broker
-  - The Broker handles an unlimited number of connections from Producers and Consumers. The core implementation:
-
-Maintains a thread-safe, in-memory data structure to store all messages.
+  - The Broker handles an unlimited number of connections from Producers and Consumers.
+  - The core implementation:Maintains a thread-safe, in-memory data structure to store all messages.
